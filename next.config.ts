@@ -1,23 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  async headers() { // these headers are needed for WASM multithreading (which spatial-player uses)
-    return [
-      {
-        source: "/:path*",
-        headers: [
-          {
-            key: "Cross-Origin-Opener-Policy",
-            value: "same-origin",
-          },
-          {
-            key: "Cross-Origin-Embedder-Policy",
-            value: "require-corp",
-          },
-        ],
-      },
-    ];
-  },
+  // 1. Disable Strict Mode (prevents double-mount crash)
+  reactStrictMode: false,
+
+  // 2. 🛡️ TRANSPILATION: Fixes "originalFactory.call" and "undefined" build errors
+  // This forces Next.js to digest the 3D libraries correctly.
+  transpilePackages: [
+    'three', 
+    '@react-three/fiber', 
+    '@react-three/drei'
+  ],
 };
 
 export default nextConfig;
